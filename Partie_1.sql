@@ -2,11 +2,11 @@
 
 -- Exercice 0
 	
--- SELECT* FROM dbo.tArtist;
--- SELECT* FROM dbo.tFilm;
--- SELECT* FROM dbo.tFilmGenre;
--- SELECT* FROM dbo.tGenre;
--- SELECT* FROM dbo.tJob;
+SELECT* FROM dbo.tArtist;
+SELECT* FROM dbo.tFilm;
+SELECT* FROM dbo.tFilmGenre;
+SELECT* FROM dbo.tGenre;
+SELECT* FROM dbo.tJob;
 
 -- On a 5 tables dans cette base de données.
 -- dbo.tArtist : id de l'artiste, son nom, son année de naissance
