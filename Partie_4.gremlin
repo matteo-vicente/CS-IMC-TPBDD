@@ -1,0 +1,64 @@
+// Exercice 1
+g.addV('Artist').property('primaryName','Matteo Vicente').next()
+
+// Exercice 2
+g.addV('Film').property('primaryTitle',"L'histoire de mon 20 au cours Infrastructure de donnees").next()
+
+// Exercice 3
+a = g.V().has('Artist','primaryName','Matteo Vicente').next()
+f = g.V().has('Film','primaryTitle',"L'histoire de mon 20 au cours Infrastructure de donnees").next()
+g.V(a).addE('acted_in').to(f).next()
+
+// Exercice 4
+prof1 = g.addV('Artist').property('primaryName','Luc Vo Van').next()
+prof2 = g.addV('Artist').property('primaryName','Thierry Rapatout').next()
+f = g.V().has('Film','primaryTitle',"L'histoire de mon 20 au cours Infrastructure de donnees").next()
+g.V(prof1).addE('directed').to(f).next()
+g.V(prof2).addE('directed').to(f).next()
+
+// Exercice 5
+g.V().has('Artist','primaryName','Nicole Kidman').values('birthYear')
+
+// Exercice 6
+g.V().hasLabel('Film')
+
+// Exercice 7
+g.V().hasLabel('Artist').has('birthYear',1963).values('primaryName')
+
+// Exercice 8
+g.V().hasLabel('Artist').
+  project('primaryName','nbFilms').
+    by(values('primaryName')).
+    by(out('acted_in').hasLabel('Film').count()).
+  where(select('nbFilms').is(gt(1)))
+
+// Exercice 9
+g.V().hasLabel('Artist').
+  project('primaryName','roles').
+    by(values('primaryName')).
+    by(outE().where(inV().hasLabel('Film')).label().dedup().fold()).
+  where(select('roles').count(local).is(gt(1)))
+
+// Exercice 10
+g.V().hasLabel('Artist').as('a').
+  outE().where(inV().hasLabel('Film')).as('e').
+  inV().as('f').
+  group().
+    by(project('artist','film').
+         by(select('a').values('primaryName')).
+         by(select('f').values('primaryTitle'))).
+    by(select('e').label().dedup().fold()).
+  unfold().
+  where(select(values).count(local).is(gt(1))).
+  project('primaryName','primaryTitle','roles').
+    by(select(keys).select('artist')).
+    by(select(keys).select('film')).
+    by(select(values))
+
+// Exercice 11
+maxActors = g.V().hasLabel('Film').map(in('acted_in').count()).max().next()
+g.V().hasLabel('Film').
+  project('primaryTitle','nbActors').
+    by(values('primaryTitle')).
+    by(in('acted_in').count()).
+  where(select('nbActors').is(eq(maxActors)))
